@@ -1,0 +1,9 @@
+=== Test Results ===
+
+Alice - Score: 85 - Pass
+Bob - Score: 67 - Pass
+Charlie - Score: 92 - Pass
+Diana - Score: 74 - Pass
+Ethan - Score: 58 - Fail
+
+Class Average: 75.200000
