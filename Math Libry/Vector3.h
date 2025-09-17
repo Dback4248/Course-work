@@ -1,14 +1,16 @@
 #pragma once
-
-#pragma once
 #include <cmath>
 #include <string>
 #include <sstream>
-#include "Vector2.h" // optional, if you have Vector2
-using namespace Mathclasses;
+#include <stdexcept>
 
 namespace MathClasses
 {
+    struct Vector2
+    {
+        float x, y;
+    };
+
     struct Vector3
     {
         union {
@@ -19,18 +21,15 @@ namespace MathClasses
         // Constructors
         Vector3() : x(0), y(0), z(0) {}
         Vector3(float inX, float inY, float inZ) : x(inX), y(inY), z(inZ) {}
-        Vector3(const Vector2& Vec2) : x(Vec2.x), y(Vec2.y), z(0) {}
-        Vector3(const Vector2& Vec2, float InZ) : x(Vec2.x), y(Vec2.y), z(InZ) {}
+        Vector3(const Vector2& vec2) : x(vec2.x), y(vec2.y), z(0) {}
+        Vector3(const Vector2& vec2, float inZ) : x(vec2.x), y(vec2.y), z(inZ) {}
 
-        // Magnitudes
+        // Math functions
         float Magnitude() const { return std::sqrt(x * x + y * y + z * z); }
         float MagnitudeSqr() const { return x * x + y * y + z * z; }
-
-        // Dot
         float Dot(const Vector3& rhs) const { return x * rhs.x + y * rhs.y + z * rhs.z; }
-        static float Dot(const Vector3& first, const Vector3& second) { return first.Dot(second); }
+        static float Dot(const Vector3& a, const Vector3& b) { return a.Dot(b); }
 
-        // Cross
         Vector3 Cross(const Vector3& rhs) const
         {
             return { y * rhs.z - z * rhs.y,
@@ -39,73 +38,79 @@ namespace MathClasses
         }
         static Vector3 Cross(const Vector3& a, const Vector3& b) { return a.Cross(b); }
 
-        // Normalisation
         void Normalise()
         {
-            float mag = Magnitude();
-            if (mag > 0) { x /= mag; y /= mag; z /= mag; }
+            float m = Magnitude();
+            if (m != 0) { x /= m; y /= m; z /= m; }
         }
-        void SafeNormalise() { if (MagnitudeSqr() > 1e-6f) Normalise(); }
-        Vector3 Normalised() const { Vector3 tmp = *this; tmp.Normalise(); return tmp; }
-        Vector3 SafeNormalised() const { Vector3 tmp = *this; tmp.SafeNormalise(); return tmp; }
-
-        // Distance
-        float Distance(const Vector3& other) const { return (*this - other).Magnitude(); }
-        float DistanceSqr(const Vector3& other) const { return (*this - other).MagnitudeSqr(); }
-        static float Distance(const Vector3& start, const Vector3& end) { return (end - start).Magnitude(); }
-        static float DistanceSqr(const Vector3& start, const Vector3& end) { return (end - start).MagnitudeSqr(); }
-
-        float AngleBetween(const Vector3& other) const
+        void SafeNormalise()
         {
-            float dot = Dot(other);
-            float mags = Magnitude() * other.Magnitude();
-            return (mags > 0) ? std::acos(dot / mags) : 0.0f;
+            float m = Magnitude();
+            if (m > 1e-6f) { x /= m; y /= m; z /= m; }
+        }
+        Vector3 Normalised() const { Vector3 r(*this); r.Normalise(); return r; }
+        Vector3 SafeNormalised() const { Vector3 r(*this); r.SafeNormalise(); return r; }
+
+        float Distance(const Vector3& o) const { return (*this - o).Magnitude(); }
+        float DistanceSqr(const Vector3& o) const { return (*this - o).MagnitudeSqr(); }
+        static float Distance(const Vector3& a, const Vector3& b) { return (a - b).Magnitude(); }
+        static float DistanceSqr(const Vector3& a, const Vector3& b) { return (a - b).MagnitudeSqr(); }
+
+        float AngleBetween(const Vector3& o) const
+        {
+            float d = Dot(o);
+            float mags = Magnitude() * o.Magnitude();
+            return (mags > 0) ? std::acos(d / mags) : 0.0f;
         }
 
         // Operators
-        Vector3 operator +(const Vector3& rhs) const { return { x + rhs.x, y + rhs.y, z + rhs.z }; }
-        Vector3& operator +=(const Vector3& rhs) { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
-        Vector3 operator -(const Vector3& rhs) const { return { x - rhs.x, y - rhs.y, z - rhs.z }; }
-        Vector3& operator -=(const Vector3& rhs) { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
+        Vector3 operator+(const Vector3& rhs) const { return { x + rhs.x, y + rhs.y, z + rhs.z }; }
+        Vector3& operator+=(const Vector3& rhs) { x += rhs.x; y += rhs.y; z += rhs.z; return *this; }
 
-        Vector3 operator *(float rhs) const { return { x * rhs, y * rhs, z * rhs }; }
-        Vector3& operator *=(float rhs) { x *= rhs; y *= rhs; z *= rhs; return *this; }
-        Vector3 operator /(float rhs) const { return { x / rhs, y / rhs, z / rhs }; }
-        Vector3& operator /=(float rhs) { x /= rhs; y /= rhs; z /= rhs; return *this; }
+        Vector3 operator-(const Vector3& rhs) const { return { x - rhs.x, y - rhs.y, z - rhs.z }; }
+        Vector3& operator-=(const Vector3& rhs) { x -= rhs.x; y -= rhs.y; z -= rhs.z; return *this; }
 
-        Vector3 operator *(const Vector3& rhs) const { return { x * rhs.x, y * rhs.y, z * rhs.z }; }
-        Vector3& operator *=(const Vector3& rhs) { x *= rhs.x; y *= rhs.y; z *= rhs.z; return *this; }
-        Vector3 operator /(const Vector3& rhs) const { return { x / rhs.x, y / rhs.y, z / rhs.z }; }
-        Vector3& operator /=(const Vector3& rhs) { x /= rhs.x; y /= rhs.y; z /= rhs.z; return *this; }
+        Vector3 operator*(float s) const { return { x * s, y * s, z * s }; }
+        Vector3& operator*=(float s) { x *= s; y *= s; z *= s; return *this; }
 
-        Vector3 operator -() const { return { -x, -y, -z }; }
+        Vector3 operator/(float s) const { return { x / s, y / s, z / s }; }
+        Vector3& operator/=(float s) { x /= s; y /= s; z /= s; return *this; }
 
-        float& operator [](int dim) { return v[dim]; }
-        const float& operator [](int dim) const { return v[dim]; }
+        Vector3 operator*(const Vector3& rhs) const { return { x * rhs.x, y * rhs.y, z * rhs.z }; }
+        Vector3& operator*=(const Vector3& rhs) { x *= rhs.x; y *= rhs.y; z *= rhs.z; return *this; }
 
-        bool operator == (const Vector3& rhs) const { return x == rhs.x && y == rhs.y && z == rhs.z; }
-        bool operator != (const Vector3& rhs) const { return !(*this == rhs); }
-        bool Equals(const Vector3& rhs, float Tolerance = 0.00001f) const
+        Vector3 operator/(const Vector3& rhs) const { return { x / rhs.x, y / rhs.y, z / rhs.z }; }
+        Vector3& operator/=(const Vector3& rhs) { x /= rhs.x; y /= rhs.y; z /= rhs.z; return *this; }
+
+        Vector3 operator-() const { return { -x, -y, -z }; }
+
+        float& operator[](int dim)
         {
-            return std::fabs(x - rhs.x) < Tolerance &&
-                std::fabs(y - rhs.y) < Tolerance &&
-                std::fabs(z - rhs.z) < Tolerance;
+            if (dim < 0 || dim > 2) throw std::out_of_range("Vector3 index out of range");
+            return v[dim];
+        }
+        const float& operator[](int dim) const
+        {
+            if (dim < 0 || dim > 2) throw std::out_of_range("Vector3 index out of range");
+            return v[dim];
+        }
+
+        bool operator==(const Vector3& rhs) const { return x == rhs.x && y == rhs.y && z == rhs.z; }
+        bool operator!=(const Vector3& rhs) const { return !(*this == rhs); }
+        bool Equals(const Vector3& rhs, float tol = 1e-6f) const
+        {
+            return std::fabs(x - rhs.x) < tol &&
+                std::fabs(y - rhs.y) < tol &&
+                std::fabs(z - rhs.z) < tol;
         }
 
         std::string ToString() const
         {
-            std::ostringstream oss;
-            oss << "(" << x << ", " << y << ", " << z << ")";
-            return oss.str();
+            std::ostringstream ss;
+            ss << "(" << x << ", " << y << ", " << z << ")";
+            return ss.str();
         }
-
-        operator float* () { return v; }
-        operator const float* () const { return v; }
     };
 
-    inline Vector3 operator*(float scalar, const Vector3& vector)
-    {
-        return Vector3(vector.x * scalar, vector.y * scalar, vector.z * scalar);
-    }
+    inline Vector3 operator*(float s, const Vector3& v) { return v * s; }
 }
-
