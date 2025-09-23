@@ -1,8 +1,11 @@
 ﻿  MathClasses tests.cpp
+C:\Users\s259081\source\repos\Dback4248\Course-work\MathClasses tests\MathClasses tests.cpp(290,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  (compiling source file '/MathClasses%20tests.cpp')
+  
      Creating library C:\Users\s259081\source\repos\Dback4248\Course-work\x64\Release\MathClasses tests.lib and object C:\Users\s259081\source\repos\Dback4248\Course-work\x64\Release\MathClasses tests.exp
   Generating code
-  42 of 224 functions (18.8%) were compiled, the rest were copied from previous compilation.
-    42 functions were new in current compilation
-    19 functions had inline decision re-evaluated but remain unchanged
+  0 of 366 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    16 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   MathClasses tests.vcxproj -> C:\Users\s259081\source\repos\Dback4248\Course-work\x64\Release\MathClasses tests.dll

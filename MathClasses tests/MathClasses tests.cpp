@@ -328,7 +328,7 @@ public:
         MathClasses::Vector4 b(4.0f, 6.0f, 3.0f, 8.0f);
 
         float dist = a.Distance(b);
-        Assert::AreEqual(6.4031f, dist, 0.0001f); // sqrt(3Â² + 4Â² + 0Â² + 4Â²)
+        Assert::AreEqual(6.4031f, dist, 0.0001f); // sqrt(3² + 4² + 0² + 4²)
     }
 
     TEST_METHOD(Vector_DistanceSqr)
@@ -337,7 +337,7 @@ public:
         MathClasses::Vector4 b(4.0f, 6.0f, 3.0f, 8.0f);
 
         float distSqr = a.DistanceSqr(b);
-        Assert::AreEqual(41.0f, distSqr); // 3Â² + 4Â² + 0Â² + 4Â²
+        Assert::AreEqual(41.0f, distSqr); // 3² + 4² + 0² + 4²
     }
 };
 
