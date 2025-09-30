@@ -39,7 +39,7 @@ namespace MathClasses
                     for (int k = 0; k < 3; k++)
                     {
                         result.m[i][j] += m[i][k] * rhs.m[k][j];
-                    }
+        }
                 }
             }
             return result;
@@ -47,7 +47,7 @@ namespace MathClasses
 
         // Matrix * Vector3
         Vector3 operator*(const Vector3& v) const
-        {
+                {
             return Vector3(
                 m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z,
                 m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z,
@@ -57,13 +57,13 @@ namespace MathClasses
 
         // Transpose
         Matrix3 Transpose() const
-        {
+                    {
             Matrix3 result;
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++)
                     result.m[i][j] = m[j][i];
             return result;
-        }
+                    }
 
         // Determinant
         float Determinant() const
@@ -76,7 +76,7 @@ namespace MathClasses
 
         // Inverse
         Matrix3 Inverse() const
-    {
+        {
             float det = Determinant();
             if (fabs(det) < 1e-6f)
                 return Matrix3(); // return identity if singular
@@ -100,4 +100,3 @@ namespace MathClasses
         }
     };
 }
-

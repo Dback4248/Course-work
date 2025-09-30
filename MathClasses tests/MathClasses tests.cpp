@@ -6,6 +6,7 @@
 #include <Matrix4.h>
 #include <Matrix3.h>
 #include <Color.h>
+#include "Colour.h"
 using namespace MathClasses;
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
