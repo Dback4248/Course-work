@@ -1,23 +1,19 @@
 #pragma once
 #include <cmath>
-#include "Vector4.h"
+#include "Vector3.h"
 
-namespace MathClasses
-{
-    class Matrix4
+    struct Matrix4
     {
-    public:
-        float m[4][4]; // Row-major order
+        float m[4][4];
 
-        // Default constructor: Identity matrix
+        // Constructors
         Matrix4()
         {
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    m[i][j] = (i == j) ? 1.0f : 0.0f;
+            for (int i = 0; i < 4; ++i)
+                for (int j = 0; j < 4; ++j)
+                    m[i][j] = (i == j ? 1.0f : 0.0f);
         }
 
-        // Constructor with 16 floats (row-major)
         Matrix4(float m00, float m01, float m02, float m03,
             float m10, float m11, float m12, float m13,
             float m20, float m21, float m22, float m23,
@@ -29,109 +25,123 @@ namespace MathClasses
             m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
         }
 
-        // Matrix * Matrix
-        Matrix4 operator*(const Matrix4& rhs) const
-        {
-            Matrix4 result;
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    result.m[i][j] = 0.0f;
-                    for (int k = 0; k < 4; k++)
-                    {
-                        result.m[i][j] += m[i][k] * rhs.m[k][j];
-                    }
-                }
-            }
-            return result;
-        }
+    static Matrix4 Identity()
+    {
+        return Matrix4(1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1);
+    }
 
-        // Matrix * Vector4
-        Vector4 operator*(const Vector4& v) const
-        {
-            return Vector4(
-                m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] * v.w,
-                m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w,
-                m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] * v.w,
-                m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] * v.w
+    // ----------------------
+    // Translation
+    // ----------------------
+    static Matrix4 MakeTranslation(float x, float y, float z)
+    {
+        return Matrix4(1, 0, 0, x,
+            0, 1, 0, y,
+            0, 0, 1, z,
+            0, 0, 0, 1);
+    }
+
+    static Matrix4 MakeTranslation(Vector3 v)
+    {
+        return MakeTranslation(v.x, v.y, v.z);
+    }
+
+    // ----------------------
+    // Rotation
+    // ----------------------
+        static Matrix4 MakeRotateX(float a)
+                {
+            return Matrix4(
+                1, 0, 0, 0,
+                0, cosf(a), -sinf(a), 0,
+                0, sinf(a), cosf(a), 0,
+                0, 0, 0, 1
             );
         }
 
-        // Transpose
-        Matrix4 Transpose() const
+        static Matrix4 MakeRotateY(float a)
+                    {
+            return Matrix4(
+                cosf(a), 0, sinf(a), 0,
+                0, 1, 0, 0,
+                -sinf(a), 0, cosf(a), 0,
+                0, 0, 0, 1
+            );
+                    }
+
+        static Matrix4 MakeRotateZ(float a)
         {
-            Matrix4 result;
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    result.m[i][j] = m[j][i];
-            return result;
-        }
-
-        // Determinant (expansion by minors)
-        float Determinant() const
-        {
-            float det =
-                m[0][0] * (
-                    m[1][1] * (m[2][2] * m[3][3] - m[2][3] * m[3][2]) -
-                    m[1][2] * (m[2][1] * m[3][3] - m[2][3] * m[3][1]) +
-                    m[1][3] * (m[2][1] * m[3][2] - m[2][2] * m[3][1])
-                    )
-                - m[0][1] * (
-                    m[1][0] * (m[2][2] * m[3][3] - m[2][3] * m[3][2]) -
-                    m[1][2] * (m[2][0] * m[3][3] - m[2][3] * m[3][0]) +
-                    m[1][3] * (m[2][0] * m[3][2] - m[2][2] * m[3][0])
-                    )
-                + m[0][2] * (
-                    m[1][0] * (m[2][1] * m[3][3] - m[2][3] * m[3][1]) -
-                    m[1][1] * (m[2][0] * m[3][3] - m[2][3] * m[3][0]) +
-                    m[1][3] * (m[2][0] * m[3][1] - m[2][1] * m[3][0])
-                    )
-                - m[0][3] * (
-                    m[1][0] * (m[2][1] * m[3][2] - m[2][2] * m[3][1]) -
-                    m[1][1] * (m[2][0] * m[3][2] - m[2][2] * m[3][0]) +
-                    m[1][2] * (m[2][0] * m[3][1] - m[2][1] * m[3][0])
-                    );
-
-            return det;
-        }
-
-        // Inverse (Gauss-Jordan elimination)
-        Matrix4 Inverse() const
-        {
-            Matrix4 inv;
-            Matrix4 a = *this;
-
-            // Initialize as identity
-            for (int i = 0; i < 4; i++)
-                for (int j = 0; j < 4; j++)
-                    inv.m[i][j] = (i == j) ? 1.0f : 0.0f;
-
-            // Gaussian elimination
-            for (int i = 0; i < 4; i++)
-            {
-                float pivot = a.m[i][i];
-                if (fabs(pivot) < 1e-6f) return Matrix4(); // return identity if singular
-
-                float invPivot = 1.0f / pivot;
-                for (int j = 0; j < 4; j++)
-                {
-                    a.m[i][j] *= invPivot;
-                    inv.m[i][j] *= invPivot;
+            return Matrix4(
+                cosf(a), -sinf(a), 0, 0,
+                sinf(a), cosf(a), 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            );
                 }
 
-                for (int k = 0; k < 4; k++)
+        static Matrix4 MakeEuler(float pitch, float yaw, float roll)
+        {
+            Matrix4 rx = MakeRotateX(pitch);
+            Matrix4 ry = MakeRotateY(yaw);
+            Matrix4 rz = MakeRotateZ(roll);
+            return rz * ry * rx;
+            }
+
+        static Matrix4 MakeEuler(const Vector3& rot)
+        {
+            return MakeEuler(rot.x, rot.y, rot.z);
+        }
+
+        // --- Scale ---
+        static Matrix4 MakeScale(float xScale, float yScale, float zScale)
+        {
+            return Matrix4(
+                xScale, 0, 0, 0,
+                0, yScale, 0, 0,
+                0, 0, zScale, 0,
+                0, 0, 0, 1
+            );
+        }
+
+        static Matrix4 MakeScale(const Vector3& scale)
+        {
+            return MakeScale(scale.x, scale.y, scale.z);
+        }
+
+        // --- Translation ---
+        static Matrix4 MakeTranslation(float x, float y, float z)
+        {
+            return Matrix4(
+                1, 0, 0, x,
+                0, 1, 0, y,
+                0, 0, 1, z,
+                0, 0, 0, 1
+                    );
+        }
+
+        static Matrix4 MakeTranslation(const Vector3& vec)
+        {
+            return MakeTranslation(vec.x, vec.y, vec.z);
+        }
+
+        // --- Operators ---
+        Matrix4 operator*(const Matrix4& rhs) const
                 {
-                    if (k == i) continue;
-                    float factor = a.m[k][i];
-                    for (int j = 0; j < 4; j++)
+            Matrix4 result;
+            for (int i = 0; i < 4; ++i)
+                {
+                for (int j = 0; j < 4; ++j)
     {
-                        a.m[k][j] -= factor * a.m[i][j];
-                        inv.m[k][j] -= factor * inv.m[i][j];
-                    }
+                    result.m[i][j] = m[i][0] * rhs.m[0][j] +
+                        m[i][1] * rhs.m[1][j] +
+                        m[i][2] * rhs.m[2][j] +
+                        m[i][3] * rhs.m[3][j];
                 }
             }
-            return inv;
+            return result;
         }
     };
 }
