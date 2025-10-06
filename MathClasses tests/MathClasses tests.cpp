@@ -1,10 +1,8 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "CppUnitTest.h"
 #include "Vector3.h"
 #include "Vector2.h"
 #include <Vector4.h>
-#include <Matrix4.h>
-#include <Matrix3.h>
 #include <Color.h>
 #include "Colour.h"
 using namespace MathClasses;
@@ -117,7 +115,7 @@ namespace MathClassesTests
             Vector3 b(4.0f, 6.0f, 3.0f);
 
             float dist = a.Distance(b);
-            Assert::AreEqual(5.0f, dist, 0.0001f); // sqrt(3² + 4²)
+            Assert::AreEqual(5.0f, dist, 0.0001f); // sqrt(3Â² + 4Â²)
         }
 
         TEST_METHOD(Vector_DistanceSqr)
@@ -126,7 +124,7 @@ namespace MathClassesTests
             Vector3 b(4.0f, 6.0f, 3.0f);
 
             float distSqr = a.DistanceSqr(b);
-            Assert::AreEqual(25.0f, distSqr); // 3² + 4²
+            Assert::AreEqual(25.0f, distSqr); // 3Â² + 4Â²
         }
     };
 }
@@ -329,7 +327,7 @@ public:
         MathClasses::Vector4 b(4.0f, 6.0f, 3.0f, 8.0f);
 
         float dist = a.Distance(b);
-        Assert::AreEqual(6.4031f, dist, 0.0001f); // sqrt(3² + 4² + 0² + 4²)
+        Assert::AreEqual(6.4031f, dist, 0.0001f); // sqrt(3Â² + 4Â² + 0Â² + 4Â²)
     }
 
     TEST_METHOD(Vector_DistanceSqr)
@@ -338,7 +336,7 @@ public:
         MathClasses::Vector4 b(4.0f, 6.0f, 3.0f, 8.0f);
 
         float distSqr = a.DistanceSqr(b);
-        Assert::AreEqual(41.0f, distSqr); // 3² + 4² + 0² + 4²
+        Assert::AreEqual(41.0f, distSqr); // 3Â² + 4Â² + 0Â² + 4Â²
     }
 };
 
@@ -394,7 +392,7 @@ public:
         MathClasses::Color c2((char8_t)128, (char8_t)128, (char8_t)128, (char8_t)128);
         MathClasses::Color result = c1 * c2;
 
-        // 128 * 128 / 255 â‰ˆ 64
+        // 128 * 128 / 255 = 64
         Assert::AreEqual(64, (int)result.r);
         Assert::AreEqual(64, (int)result.g);
         Assert::AreEqual(64, (int)result.b);
