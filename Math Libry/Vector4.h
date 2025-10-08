@@ -85,7 +85,7 @@ namespace MathClasses
         {
             float mag = Magnitude();
             if (mag > 0.0f)
-        {
+            {
                 x /= mag; y /= mag; z /= mag; w /= mag;
             }
         }
@@ -116,13 +116,13 @@ namespace MathClasses
 
         // Distance squared
         float DistanceSqr(const Vector4& rhs) const
-    {
+        {
             float dx = rhs.x - x;
             float dy = rhs.y - y;
             float dz = rhs.z - z;
             float dw = rhs.w - w;
             return dx * dx + dy * dy + dz * dz + dw * dw;
-    }
+        }
     };
 }
 

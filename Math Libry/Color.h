@@ -2,6 +2,7 @@
 #include <cmath>
 #include <string>
 #include <algorithm>
+#include <cstdint>
 
 namespace MathClasses
 {

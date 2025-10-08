@@ -21,7 +21,7 @@ namespace MathClasses
         // Magnitude (length)
         float Magnitude() const { return std::sqrt(MagnitudeSqr()); }
 
-        // Normalize (unsafe â€“ assumes length > 0)
+        // Normalize (unsafe – assumes length > 0)
         void Normalize()
         {
             float m = Magnitude();
@@ -30,7 +30,7 @@ namespace MathClasses
                 x /= m;
                 y /= m;
                 z /= m;
-        }
+            }
         }
 
         // Safe normalize (if length == 0, stays zero vector)
@@ -42,7 +42,7 @@ namespace MathClasses
                 x /= m;
                 y /= m;
                 z /= m;
-        }
+            }
         }
 
         // Distance
