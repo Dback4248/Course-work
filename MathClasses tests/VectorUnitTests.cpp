@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "Vector3.h"
-#include "Vector2.h"
-#include <Vector4.h>
+#include "../Math Libry/Vector3.h"
+#include "../Math Libry/Vector2.h"
+#include "../Math Libry/Vector4.h"
 
 using namespace MathClasses;
 
