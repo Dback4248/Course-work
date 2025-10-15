@@ -1,0 +1,7 @@
+﻿  Animatronic.cpp
+C:\Users\s259081\source\repos\Dback4248\Course-work\FANF_Raylib\Animatronic.cpp(13,19): error C3861: 'GetRandomValue': identifier not found
+  camera_system.cpp
+  game.cpp
+C:\Users\s259081\source\repos\Dback4248\Course-work\FANF_Raylib\game.cpp(34,22): error C3861: 'GeFrameTime': identifier not found
+  Main.cpp
+  ui.cpp
